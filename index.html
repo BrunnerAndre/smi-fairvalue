@@ -1,86 +1,90 @@
 <!doctype html>
-<html lang="de">
+<html lang="de-CH">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SMI Fair Value (DCF) – Theo Capital</title>
-  <meta name="description" content="Fundamentale Fair-Value-Bewertung aller SMI-Titel mittels DCF-Methode. Kostenlos, transparent, Schweiz." />
-  <link rel="stylesheet" href="./styles.css" />
+  <title>Theo Capital — SMI Kurse</title>
+
+  <!-- Dein globales CSS bleibt -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Seite-spezifisches CSS -->
+  <link rel="stylesheet" href="smi.css" />
 </head>
-<body>
-  <header class="wrap">
-    <h1>SMI Fair Value (DCF)</h1>
-    <p class="muted">Fundamentale Bewertung aller SMI-Titel – Theo Capital</p>
+
+<body class="tc-body tc-bg">
+  <header class="tc-wrap tc-nav">
+    <a class="tc-brand" href="index.html">
+      <span class="tc-logo" aria-hidden="true"></span>
+      <span class="tc-brandname">Theo Capital</span>
+    </a>
+
+    <nav class="tc-navlinks">
+      <a class="tc-pill" href="smi.html">SMI Kurse</a>
+      <a class="tc-pill" href="index.html#fairvalue">Fair Value</a>
+    </nav>
   </header>
 
-  <main class="wrap grid">
-    <section class="card">
-      <h2>Globale Annahmen</h2>
-
-      <div class="form-grid">
-        <label>FCF-Wachstum (Jahre 1–5)
-          <input id="g1" type="number" step="0.1" value="3.5" />
-        </label>
-
-        <label>Langfristwachstum
-          <input id="gT" type="number" step="0.1" value="1.5" />
-        </label>
-
-        <label>Diskontsatz (WACC)
-          <input id="r" type="number" step="0.1" value="7.5" />
-        </label>
-
-        <label>Horizont (Jahre)
-          <input id="years" type="number" step="1" value="10" min="5" max="30" />
-        </label>
-      </div>
-
-      <div class="row">
-        <button id="recalc">Neu berechnen</button>
-        <button id="reset">Defaults</button>
-      </div>
-
-      <p class="muted small">
-        Fair Value = Barwert der Free Cashflows + Terminal Value + Net Cash / Aktien
+  <main class="tc-wrap">
+    <section class="tc-hero">
+      <div class="tc-kicker"><span class="tc-dot"></span> Dummy Quotes (MVP)</div>
+      <h1 class="tc-h1">SMI Kurse</h1>
+      <p class="tc-sub">
+        Mock-Daten zum Designen &amp; Layout testen. API folgt als nächster Schritt.
       </p>
     </section>
 
-    <section class="card">
-  <h2>SMI Übersicht</h2>
-  <div class="muted small">Fair Value (DCF) vs. aktueller Kurs – inkl. Ampel.</div>
+    <section class="tc-grid">
+      <div class="tc-card">
+        <div class="tc-card-inner">
+          <div class="tc-row">
+            <input id="filter" class="tc-input" placeholder="Filter: Name oder Symbol (z.B. Nestlé, NESN, UBSG …)" />
+            <button id="refreshBtn" class="tc-btn" type="button">Neu würfeln</button>
+            <span id="lastUpdate" class="tc-badge">Stand: —</span>
+          </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Titel</th>
-          <th>Kurs</th>
-          <th>Fair Value</th>
-          <th>Upside</th>
-          <th>Ampel</th>
-        </tr>
-      </thead>
-      <tbody id="list"></tbody>
-    </table>
-  </div>
-</section>
+          <div class="tc-tablewrap">
+            <table class="tc-table">
+              <thead>
+                <tr>
+                  <th>Titel</th>
+                  <th>Symbol</th>
+                  <th>Preis</th>
+                  <th>Δ</th>
+                  <th>Δ%</th>
+                </tr>
+              </thead>
+              <tbody id="tbody"></tbody>
+            </table>
+          </div>
 
+          <p class="tc-foot">
+            Hinweis: Das sind Dummy-Werte. Als nächstes ersetzen wir die Datenquelle durch eine API / Proxy.
+          </p>
+        </div>
+      </div>
 
-    <section class="card">
-      <h2>Detail</h2>
-      <div id="detail" class="muted">Bitte links einen Titel auswählen.</div>
+      <aside class="tc-card">
+        <div class="tc-card-inner">
+          <div class="tc-mini">
+            <div class="tc-stat">
+              <div class="tc-stat-label">Status</div>
+              <div id="status" class="tc-stat-value">Bereit</div>
+            </div>
+            <div class="tc-stat">
+              <div class="tc-stat-label">Titel</div>
+              <div id="count" class="tc-stat-value">—</div>
+            </div>
+          </div>
+
+          <p class="tc-foot" style="margin-top:14px;">
+            Nächster Schritt: pro Titel zusätzlich <b>Fair Value</b> + <b>Discount/Premium</b> und eine Erklärung (Growth &amp; Margins).
+          </p>
+        </div>
+      </aside>
     </section>
   </main>
 
-  <footer class="wrap muted small">
-  <p>
-    © Theo Capital ·
-    <a href="./disclaimer.html" class="muted">Disclaimer</a> ·
-    <a href="./impressum.html" class="muted">Impressum</a>
-  </p>
-</footer>
-
-
-  <script src="./app.js"></script>
+  <script src="smi.js"></script>
 </body>
 </html>
