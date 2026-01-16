@@ -125,3 +125,35 @@ hr {
   border-top: 1px solid #223047;
   margin: 12px 0;
 }
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #223047;
+  vertical-align: middle;
+}
+
+th {
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #a9b4c5;
+}
+
+td .sym { color: #a9b4c5; font-size: 12px; margin-left: 6px; }
+
+.badge-green { border-color: #1f6f4a; color: #a7f3d0; }
+.badge-yellow { border-color: #6b5b1b; color: #fde68a; }
+.badge-red { border-color: #6b1b1b; color: #fecaca; }
+.badge-gray { border-color: #223047; color: #cfe0ff; }
+
+.pct-pos { color: #a7f3d0; }
+.pct-neg { color: #fecaca; }
+
