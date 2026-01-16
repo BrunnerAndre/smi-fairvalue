@@ -1,22 +1,162 @@
 [
-  {"name":"ABB Ltd","symbol":"ABBN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Alcon Inc","symbol":"ALC","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Amrize","symbol":"AMRZ","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Geberit AG","symbol":"GEBN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Givaudan SA","symbol":"GIVN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Holcim Ltd","symbol":"HOLN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Kuehne+Nagel International AG","symbol":"KNIN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Logitech International SA","symbol":"LOGN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Lonza Group AG","symbol":"LONN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Nestlé SA","symbol":"NESN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Novartis AG","symbol":"NOVN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Partners Group Holding AG","symbol":"PGHN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Compagnie Financière Richemont SA","symbol":"CFR","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Roche Holding AG","symbol":"ROG","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Sika AG","symbol":"SIKA","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Swiss Life Holding AG","symbol":"SLHN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Swiss Re AG","symbol":"SREN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Swisscom AG","symbol":"SCMN","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"UBS Group AG","symbol":"UBSG","currency":"CHF","fcf":0,"netCash":0,"shares":0},
-  {"name":"Zurich Insurance Group AG","symbol":"ZURN","currency":"CHF","fcf":0,"netCash":0,"shares":0}
+  {
+    "name": "ABB Ltd",
+    "symbol": "ABBN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Alcon Inc",
+    "symbol": "ALC",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Amrize",
+    "symbol": "AMRZ",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Geberit AG",
+    "symbol": "GEBN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Givaudan SA",
+    "symbol": "GIVN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Holcim Ltd",
+    "symbol": "HOLN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Kuehne+Nagel International AG",
+    "symbol": "KNIN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Logitech International SA",
+    "symbol": "LOGN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Lonza Group AG",
+    "symbol": "LONN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Nestlé SA",
+    "symbol": "NESN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Novartis AG",
+    "symbol": "NOVN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Partners Group Holding AG",
+    "symbol": "PGHN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Compagnie Financière Richemont SA",
+    "symbol": "CFR",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Roche Holding AG",
+    "symbol": "ROG",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Sika AG",
+    "symbol": "SIKA",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Swiss Life Holding AG",
+    "symbol": "SLHN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Swiss Re AG",
+    "symbol": "SREN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Swisscom AG",
+    "symbol": "SCMN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "UBS Group AG",
+    "symbol": "UBSG",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  },
+  {
+    "name": "Zurich Insurance Group AG",
+    "symbol": "ZURN",
+    "currency": "CHF",
+    "fcf": 0,
+    "netCash": 0,
+    "shares": 0
+  }
 ]

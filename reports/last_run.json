@@ -1,0 +1,106 @@
+{
+  "timestamp_utc": "2026-01-16T12:50:10.782748Z",
+  "updated": 0,
+  "failures": [
+    {
+      "symbol": "ABBN",
+      "fmpSymbol": "ABBN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=ABBN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "ALC",
+      "fmpSymbol": "ALC.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=ALC.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "AMRZ",
+      "fmpSymbol": "AMRZ.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=AMRZ.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "GEBN",
+      "fmpSymbol": "GEBN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=GEBN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "GIVN",
+      "fmpSymbol": "GIVN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=GIVN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "HOLN",
+      "fmpSymbol": "HOLN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=HOLN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "KNIN",
+      "fmpSymbol": "KNIN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=KNIN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "LOGN",
+      "fmpSymbol": "LOGN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=LOGN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "LONN",
+      "fmpSymbol": "LONN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=LONN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "NESN",
+      "fmpSymbol": "NESN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=NESN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "NOVN",
+      "fmpSymbol": "NOVN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=NOVN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "PGHN",
+      "fmpSymbol": "PGHN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=PGHN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "CFR",
+      "fmpSymbol": "CFR.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=CFR.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "ROG",
+      "fmpSymbol": "ROG.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=ROG.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "SIKA",
+      "fmpSymbol": "SIKA.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=SIKA.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "SLHN",
+      "fmpSymbol": "SLHN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=SLHN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "SREN",
+      "fmpSymbol": "SREN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=SREN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "SCMN",
+      "fmpSymbol": "SCMN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=SCMN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "UBSG",
+      "fmpSymbol": "UBSG.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=UBSG.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    },
+    {
+      "symbol": "ZURN",
+      "fmpSymbol": "ZURN.SW",
+      "error": "402 Client Error: Payment Required for url: https://financialmodelingprep.com/stable/cash-flow-statement?symbol=ZURN.SW&limit=1&apikey=7lOGtZ5P8sDfS1sZUf1PLCbSt6ayg3YN"
+    }
+  ]
+}
