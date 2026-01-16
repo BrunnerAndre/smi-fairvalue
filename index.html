@@ -4,12 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Theo Capital — SMI Kurse</title>
-
-  <!-- Dein globales CSS bleibt -->
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Seite-spezifisches CSS -->
-  <link rel="stylesheet" href="smi.css" />
 </head>
 
 <body class="tc-body tc-bg">
@@ -20,13 +15,13 @@
     </a>
 
     <nav class="tc-navlinks">
-      <a class="tc-pill" href="smi.html">SMI Kurse</a>
-      <a class="tc-pill" href="index.html#fairvalue">Fair Value</a>
+      <a class="tc-pill" href="#smi">SMI Kurse</a>
+      <a class="tc-pill" href="#fairvalue">Fair Value</a>
     </nav>
   </header>
 
   <main class="tc-wrap">
-    <section class="tc-hero">
+    <section class="tc-hero" id="smi">
       <div class="tc-kicker"><span class="tc-dot"></span> Dummy Quotes (MVP)</div>
       <h1 class="tc-h1">SMI Kurse</h1>
       <p class="tc-sub">
@@ -50,6 +45,8 @@
                   <th>Titel</th>
                   <th>Symbol</th>
                   <th>Preis</th>
+                  <th>Fair Value</th>
+                  <th>Discount / Premium</th>
                   <th>Δ</th>
                   <th>Δ%</th>
                 </tr>
@@ -58,7 +55,7 @@
             </table>
           </div>
 
-          <p class="tc-foot">
+          <p class="tc-foot" id="fairvalue">
             Hinweis: Das sind Dummy-Werte. Als nächstes ersetzen wir die Datenquelle durch eine API / Proxy.
           </p>
         </div>
@@ -78,13 +75,13 @@
           </div>
 
           <p class="tc-foot" style="margin-top:14px;">
-            Nächster Schritt: pro Titel zusätzlich <b>Fair Value</b> + <b>Discount/Premium</b> und eine Erklärung (Growth &amp; Margins).
+            Nächster Schritt: pro Titel zusätzlich <b>Wachstum</b> &amp; <b>Net Income Margin</b> erklären (Discount/Premium Narrative).
           </p>
         </div>
       </aside>
     </section>
   </main>
 
-  <script src="smi.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
