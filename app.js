@@ -1,124 +1,98 @@
-let smi = [];
-let selected = null;
+// SMI Dummy quotes — no API
 
-function fmtMoney(x, ccy = "CHF") {
-  if (x === null || x === undefined || !isFinite(x) || x === 0) return "—";
-  return new Intl.NumberFormat("de-CH", {
-    style: "currency",
-    currency: ccy,
-    maximumFractionDigits: 0,
-  }).format(x);
+const SMI = [
+  { name: "ABB", symbol: "ABBN.SW", base: 44.20 },
+  { name: "Alcon", symbol: "ALCN.SW", base: 74.30 },
+  { name: "Geberit", symbol: "GEBN.SW", base: 520.00 },
+  { name: "Givaudan", symbol: "GIVN.SW", base: 3900.00 },
+  { name: "Holcim", symbol: "HOLN.SW", base: 70.50 },
+  { name: "Kuehne+Nagel", symbol: "KNIN.SW", base: 240.00 },
+  { name: "Logitech", symbol: "LOGN.SW", base: 82.00 },
+  { name: "Lonza", symbol: "LONN.SW", base: 430.00 },
+  { name: "Nestlé", symbol: "NESN.SW", base: 98.50 },
+  { name: "Novartis", symbol: "NOVN.SW", base: 92.80 },
+  { name: "Partners Group", symbol: "PGHN.SW", base: 1270.00 },
+  { name: "Richemont", symbol: "CFR.SW", base: 120.00 },
+  { name: "Roche", symbol: "ROG.SW", base: 245.00 },
+  { name: "Sika", symbol: "SIKA.SW", base: 265.00 },
+  { name: "Sonova", symbol: "SOON.SW", base: 300.00 },
+  { name: "Swiss Life", symbol: "SLHN.SW", base: 710.00 },
+  { name: "Swiss Re", symbol: "SREN.SW", base: 105.00 },
+  { name: "Swisscom", symbol: "SCMN.SW", base: 520.00 },
+  { name: "UBS", symbol: "UBSG.SW", base: 28.00 },
+  { name: "Zurich Insurance", symbol: "ZURN.SW", base: 455.00 },
+];
+
+const elTbody = document.getElementById("tbody");
+const elStatus = document.getElementById("status");
+const elLast = document.getElementById("lastUpdate");
+const elFilter = document.getElementById("filter");
+const elRefresh = document.getElementById("refreshBtn");
+const elCount = document.getElementById("count");
+
+function fmt(x, digits=2){
+  if (x === null || x === undefined || Number.isNaN(x)) return "—";
+  return Number(x).toFixed(digits);
+}
+function pct(x, digits=2){
+  if (x === null || x === undefined || Number.isNaN(x)) return "—";
+  return `${Number(x).toFixed(digits)}%`;
 }
 
-function fmtPct(x) {
-  if (x === null || x === undefined || !isFinite(x) || x === 0) return "—";
-  const v = Math.round(x * 10) / 10;
-  const sign = v > 0 ? "+" : "";
-  return `${sign}${v}%`;
+// Dummy generator: kleine Schwankung um base
+function makeDummyQuote(base){
+  // daily % change between -2.0% and +2.0%
+  const dp = (Math.random() * 4) - 2;
+  const c = base * (1 + dp / 100);
+  const d = c - base;
+  return { c, d, dp };
 }
 
-function badgeClass(label) {
-  const l = (label || "").toLowerCase();
-  if (l.includes("unter")) return "badge badge-green";
-  if (l.includes("über")) return "badge badge-red";
-  if (l.includes("fair")) return "badge badge-yellow";
-  return "badge badge-gray";
+let quotes = new Map(); // symbol -> {c,d,dp}
+
+function seedQuotes(){
+  quotes.clear();
+  for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
 }
 
-function pctClass(x) {
-  if (!isFinite(x) || x === 0) return "";
-  return x > 0 ? "pct-pos" : "pct-neg";
-}
+function render(){
+  const q = (elFilter.value || "").trim().toLowerCase();
+  const rows = SMI.filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q));
+  elCount.textContent = String(rows.length);
 
-function safeNum(x) {
-  const v = Number(x);
-  return isFinite(v) ? v : 0;
-}
-
-function renderTable() {
-  const tbody = document.getElementById("list");
-  tbody.innerHTML = "";
-
-  // Sort: most undervalued first (highest upside)
-  const rows = [...smi].sort((a, b) => safeNum(b.upsidePct) - safeNum(a.upsidePct));
-
-  rows.forEach((s) => {
-    const tr = document.createElement("tr");
-    tr.style.cursor = "pointer";
-    tr.onclick = () => {
-      selected = s.symbol;
-      renderDetail();
-    };
-
-    const ccy = s.currency || "CHF";
-    const price = safeNum(s.price);
-    const fv = safeNum(s.fairValueBase);
-    const up = safeNum(s.upsidePct);
-    const label = s.valuationLabel || "unbekannt";
-
-    tr.innerHTML = `
-      <td>
-        <strong>${s.name}</strong><span class="sym">(${s.symbol})</span>
-      </td>
-      <td>${fmtMoney(price, ccy)}</td>
-      <td>${fmtMoney(fv, ccy)}</td>
-      <td class="${pctClass(up)}">${fmtPct(up)}</td>
-      <td><span class="${badgeClass(label)}">${label}</span></td>
+  elTbody.innerHTML = rows.map(r => {
+    const quote = quotes.get(r.symbol);
+    const cls = quote.dp >= 0 ? "tc-pos" : "tc-neg";
+    return `
+      <tr>
+        <td>${r.name}</td>
+        <td class="tc-mono">${r.symbol}</td>
+        <td class="tc-num">${fmt(quote.c)}</td>
+        <td class="tc-num ${cls}">${fmt(quote.d)}</td>
+        <td class="tc-num ${cls}">${pct(quote.dp)}</td>
+      </tr>
     `;
-
-    tbody.appendChild(tr);
-  });
+  }).join("");
 }
 
-function renderDetail() {
-  const el = document.getElementById("detail");
-  const s = smi.find((x) => x.symbol === selected);
+function refresh(){
+  elRefresh.disabled = true;
+  elStatus.textContent = "Würfle…";
 
-  if (!s) {
-    el.innerHTML = `<div class="muted">Bitte in der Tabelle einen Titel auswählen.</div>`;
-    return;
-  }
-
-  const ccy = s.currency || "CHF";
-  const price = safeNum(s.price);
-  const low = safeNum(s.fairValueLow);
-  const base = safeNum(s.fairValueBase);
-  const high = safeNum(s.fairValueHigh);
-  const up = safeNum(s.upsidePct);
-  const label = s.valuationLabel || "unbekannt";
-  const updated = s.lastUpdatedUtc || "—";
-
-  el.innerHTML = `
-    <div>
-      <strong>${s.name}</strong> <span class="muted">(${s.symbol})</span>
-    </div>
-
-    <div class="kv">
-      <div class="muted">Kurs</div><div>${fmtMoney(price, ccy)}</div>
-      <div class="muted">Fair Value (low)</div><div>${fmtMoney(low, ccy)}</div>
-      <div class="muted">Fair Value (base)</div><div>${fmtMoney(base, ccy)}</div>
-      <div class="muted">Fair Value (high)</div><div>${fmtMoney(high, ccy)}</div>
-      <div class="muted">Upside</div><div class="${pctClass(up)}">${fmtPct(up)}</div>
-      <div class="muted">Ampel</div><div><span class="${badgeClass(label)}">${label}</span></div>
-      <div class="muted">Letztes Update (UTC)</div><div class="muted small">${updated}</div>
-    </div>
-
-    <hr />
-
-    <p class="muted small">
-      Hinweis: Fair Values basieren auf DCF-Annahmen und den im Repo gepflegten Fundamentals (FCF/Net Cash/Shares).
-    </p>
-  `;
+  // kleine künstliche Verzögerung für “loading feel”
+  setTimeout(() => {
+    seedQuotes();
+    render();
+    elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+    elStatus.textContent = "OK";
+    elRefresh.disabled = false;
+  }, 250);
 }
 
-async function load() {
-  // IMPORTANT: Do NOT use localStorage anymore for the main view,
-  // because we want the canonical data from smi.json.
-  const res = await fetch("./smi.json", { cache: "no-store" });
-  smi = await res.json();
+elFilter.addEventListener("input", render);
+elRefresh.addEventListener("click", refresh);
 
-  renderTable();
-  renderDetail();
-}
-
-load();
+// init
+seedQuotes();
+render();
+elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
