@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Disclaimer – Theo Capital</title>
+  <meta name="description" content="Disclaimer: Keine Anlageberatung, keine Empfehlungen, keine Haftung. Theo Capital." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>Disclaimer</h1>
+    <p class="muted">Keine Anlageberatung · Informationszwecke</p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Keine Anlageberatung</h2>
+      <p class="muted">
+        Die auf dieser Website (theocapital.com) bereitgestellten Inhalte dienen ausschliesslich Informations- und
+        Bildungszwecken. Sie stellen <strong>keine Anlageberatung, keine Anlageempfehlung, kein Angebot und keine Aufforderung</strong>
+        zum Kauf oder Verkauf von Finanzinstrumenten dar.
+      </p>
+
+      <h2>Modelle, Annahmen, Daten</h2>
+      <p class="muted">
+        Die dargestellten Bewertungen, Fair-Value-Schätzungen, Modelle (insbesondere DCF-Berechnungen) sowie sonstigen Analysen
+        beruhen auf Annahmen, vereinfachten Modellen und (teilweise) öffentlich zugänglichen Informationen. Diese können sich
+        jederzeit ändern und erheben keinen Anspruch auf Vollständigkeit, Richtigkeit oder Aktualität.
+      </p>
+
+      <h2>Risiken</h2>
+      <p class="muted">
+        Investitionen in Wertpapiere sind mit Risiken verbunden, einschliesslich des möglichen Verlusts des eingesetzten Kapitals.
+        Die vergangene Wertentwicklung ist <strong>kein verlässlicher Indikator</strong> für zukünftige Ergebnisse.
+      </p>
+
+      <h2>Haftungsausschluss</h2>
+      <p class="muted">
+        Der Betreiber dieser Website übernimmt <strong>keine Haftung</strong> für Verluste oder Schäden, die direkt oder indirekt
+        aus der Nutzung der bereitgestellten Informationen entstehen. Nutzer handeln ausschliesslich <strong>auf eigene Verantwortung</strong>.
+      </p>
+
+      <h2>Eigenverantwortung</h2>
+      <p class="muted">
+        Es wird empfohlen, vor Anlageentscheidungen eine <strong>qualifizierte, unabhängige Finanz- oder Anlageberatung</strong>
+        in Anspruch zu nehmen.
+      </p>
+
+      <hr />
+
+      <p class="muted small">
+        Durch die Nutzung dieser Website erklärst du dich mit diesem Disclaimer einverstanden.
+      </p>
+
+      <div class="row">
+        <a href="./index.html" class="muted">← Zur Startseite</a>
+        <span class="muted">·</span>
+        <a href="./impressum.html" class="muted">Impressum</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap muted small">
+    <p>© Theo Capital</p>
+  </footer>
+</body>
+</html>
