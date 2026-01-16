@@ -92,7 +92,7 @@ function render() {
 
 function refresh() {
   elRefresh.disabled = true;
-  elStatus.textContent = "Würfle…";
+  elStatus.textContent = "Refreshing…";
 
   setTimeout(() => {
     seedQuotes();
