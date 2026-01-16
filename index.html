@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SMI Fair Value (DCF) – Theo Capital</title>
+  <meta name="description" content="Fundamentale Fair-Value-Bewertung aller SMI-Titel mittels DCF-Methode. Kostenlos, transparent, Schweiz." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>SMI Fair Value (DCF)</h1>
+    <p class="muted">Fundamentale Bewertung aller SMI-Titel – Theo Capital</p>
+  </header>
+
+  <main class="wrap grid">
+    <section class="card">
+      <h2>Globale Annahmen</h2>
+
+      <div class="form-grid">
+        <label>FCF-Wachstum (Jahre 1–5)
+          <input id="g1" type="number" step="0.1" value="3.5" />
+        </label>
+
+        <label>Langfristwachstum
+          <input id="gT" type="number" step="0.1" value="1.5" />
+        </label>
+
+        <label>Diskontsatz (WACC)
+          <input id="r" type="number" step="0.1" value="7.5" />
+        </label>
+
+        <label>Horizont (Jahre)
+          <input id="years" type="number" step="1" value="10" min="5" max="30" />
+        </label>
+      </div>
+
+      <div class="row">
+        <button id="recalc">Neu berechnen</button>
+        <button id="reset">Defaults</button>
+      </div>
+
+      <p class="muted small">
+        Fair Value = Barwert der Free Cashflows + Terminal Value + Net Cash / Aktien
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>SMI Titel</h2>
+      <div class="muted small">Klicke auf einen Titel für Details.</div>
+      <div id="list" class="list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Detail</h2>
+      <div id="detail" class="muted">Bitte links einen Titel auswählen.</div>
+    </section>
+  </main>
+
+  <footer class="wrap muted small">
+    <p>© Theo Capital – keine Anlageberatung</p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
