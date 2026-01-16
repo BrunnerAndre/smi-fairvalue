@@ -165,3 +165,22 @@
 .tc-foot{
   margin-top: 14px;
   color: rgba(255,255,255,.50);
+
+  /* Disclaimer */
+.tc-disclaimer{
+  margin-top: 40px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.04);
+  color: rgba(255,255,255,.55);
+  font-size: 13px;
+  line-height: 1.55;
+  backdrop-filter: blur(12px);
+}
+
+.tc-disclaimer strong{
+  color: rgba(255,255,255,.75);
+  font-weight: 600;
+}
+
