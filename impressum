@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Impressum – Theo Capital</title>
+  <meta name="description" content="Impressum und Kontaktinformationen von Theo Capital." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="wrap">
+    <h1>Impressum</h1>
+    <p class="muted">Betreiber · Kontakt · Rechtliche Hinweise</p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Betreiber</h2>
+      <div class="kv">
+        <div class="muted">Website</div><div>theocapital.com</div>
+        <div class="muted">Betreiber</div><div>Andre Brunner</div>
+        <div class="muted">Standort</div><div>Schweiz</div>
+        <div class="muted">Kontakt</div><div><a class="muted" href="mailto:andre.brunner@theocapital.com">andre.brunner@theocapital.com</a></div>
+      </div>
+
+      <hr />
+
+      <h2>Haftungsausschluss</h2>
+      <p class="muted">
+        Der Betreiber übernimmt keine Gewähr für die inhaltliche Richtigkeit, Genauigkeit, Aktualität, Zuverlässigkeit und
+        Vollständigkeit der Informationen auf dieser Website. Haftungsansprüche gegen den Betreiber wegen Schäden materieller oder
+        immaterieller Art, welche aus dem Zugriff oder der Nutzung bzw. Nichtnutzung der veröffentlichten Informationen entstanden sind,
+        werden ausgeschlossen.
+      </p>
+
+      <h2>Urheberrecht</h2>
+      <p class="muted">
+        Die Inhalte dieser Website sind urheberrechtlich geschützt. Eine Verwendung, Vervielfältigung oder Verbreitung ohne ausdrückliche
+        Zustimmung des Betreibers ist nicht gestattet.
+      </p>
+
+      <h2>Externe Links</h2>
+      <p class="muted">
+        Verweise und Links auf Webseiten Dritter liegen ausserhalb unseres Verantwortungsbereichs. Es wird jegliche Verantwortung für
+        solche Webseiten abgelehnt.
+      </p>
+
+      <div class="row">
+        <a href="./index.html" class="muted">← Zur Startseite</a>
+        <span class="muted">·</span>
+        <a href="./disclaimer.html" class="muted">Disclaimer</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap muted small">
+    <p>© Theo Capital</p>
+  </footer>
+</body>
+</html>
