@@ -512,3 +512,19 @@ body{
   color: rgba(11,15,20,.85);
   font-weight:800;
 }
+/* ===== Sorting UX ===== */
+.tc-table th[data-sort]{
+  cursor: pointer;
+  user-select: none;
+}
+
+.tc-table th[data-sort]:hover{
+  background: rgba(11,15,20,.02);
+}
+
+/* Selected row highlight */
+.tc-table tbody tr.is-selected{
+  outline: 2px solid rgba(0,163,255,.35);
+  outline-offset: -2px;
+  background: rgba(0,163,255,.06);
+}
