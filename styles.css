@@ -15,7 +15,12 @@
   overflow-x:hidden;
 }
 
-.tc-wrap{ width:min(1100px, 92vw); margin:0 auto; padding:24px 0; }
+.tc-tablewrap{
+  margin-top:12px;
+  overflow-x: auto;       /* horizontal scroll */
+  -webkit-overflow-scrolling: touch;
+}
+
 
 .tc-nav{
   display:flex; align-items:center; justify-content:space-between;
