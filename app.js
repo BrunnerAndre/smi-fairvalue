@@ -1,5 +1,5 @@
-// Theo Capital — SMI Dummy quotes (no API)
-// Robust init: waits for DOMContentLoaded + basic diagnostics.
+// Theo Capital — SMI Dummy List (no API)
+// Stable version: renders full SMI table with Fair Value + Discount/Premium
 
 const SMI = [
   { name: "ABB", symbol: "ABBN.SW", base: 44.20, fairValue: 50.00 },
@@ -36,18 +36,19 @@ function pct(x, digits = 2) {
 }
 
 function makeDummyQuote(base) {
-  const dp = (Math.random() * 4) - 2; // -2%..+2%
+  // daily % change between -2% and +2%
+  const dp = (Math.random() * 4) - 2;
   const c = base * (1 + dp / 100);
   const d = c - base;
   return { c, d, dp };
 }
 
 function discountPct(price, fairValue) {
-  return ((fairValue - price) / fairValue) * 100; // + = discount
+  // positive = discount (price below fair value)
+  return ((fairValue - price) / fairValue) * 100;
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Grab DOM nodes AFTER DOM is ready
   const elTbody = document.getElementById("tbody");
   const elStatus = document.getElementById("status");
   const elLast = document.getElementById("lastUpdate");
@@ -55,20 +56,18 @@ window.addEventListener("DOMContentLoaded", () => {
   const elRefresh = document.getElementById("refreshBtn");
   const elCount = document.getElementById("count");
 
-  // Hard fail early if markup doesn't match
   if (!elTbody) {
-    console.error("[TheoCapital] #tbody not found. Check index.html has <tbody id='tbody'></tbody>.");
+    console.error("tbody not found — check index.html");
     return;
   }
 
-  // Diagnostics: confirms app.js is loaded
-  console.log("[TheoCapital] app.js loaded. Rendering rows:", SMI.length);
-
-  let quotes = new Map(); // symbol -> {c,d,dp}
+  let quotes = new Map();
 
   function seedQuotes() {
     quotes.clear();
-    for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
+    for (const r of SMI) {
+      quotes.set(r.symbol, makeDummyQuote(r.base));
+    }
   }
 
   function render() {
@@ -77,48 +76,54 @@ window.addEventListener("DOMContentLoaded", () => {
       !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q)
     );
 
-    if (elCount) elCount.textContent = String(rows.length);
+    elCount.textContent = rows.length;
 
     elTbody.innerHTML = rows.map(r => {
-      const quote = quotes.get(r.symbol) || makeDummyQuote(r.base);
-      const clsMove = quote.dp >= 0 ? "tc-pos" : "tc-neg";
+      const quote = quotes.get(r.symbol);
+      const moveCls = quote.dp >= 0 ? "tc-pos" : "tc-neg";
 
       const disc = discountPct(quote.c, r.fairValue);
-      const badgeCls = disc >= 0 ? "tc-discount" : "tc-premium";
+      const discCls = disc >= 0 ? "tc-discount" : "tc-premium";
 
       return `
         <tr>
           <td>${r.name}</td>
           <td class="tc-mono">${r.symbol}</td>
+
           <td class="tc-num">${fmt(quote.c)}</td>
           <td class="tc-num">${fmt(r.fairValue)}</td>
-          <td><span class="tc-badge2 ${badgeCls}">${pct(disc)}</span></td>
-          <td class="tc-num ${clsMove}">${fmt(quote.d)}</td>
-          <td class="tc-num ${clsMove}">${pct(quote.dp)}</td>
+
+          <td>
+            <span class="tc-badge2 ${discCls}">
+              ${pct(disc)}
+            </span>
+          </td>
+
+          <td class="tc-num ${moveCls}">${fmt(quote.d)}</td>
+          <td class="tc-num ${moveCls}">${pct(quote.dp)}</td>
         </tr>
       `;
     }).join("");
   }
 
   function refresh() {
-    if (elRefresh) elRefresh.disabled = true;
-    if (elStatus) elStatus.textContent = "Refreshing…";
+    elStatus.textContent = "Refreshing…";
+    elRefresh.disabled = true;
 
     setTimeout(() => {
       seedQuotes();
       render();
-      if (elLast) elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
-      if (elStatus) elStatus.textContent = "OK";
-      if (elRefresh) elRefresh.disabled = false;
+      elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+      elStatus.textContent = "OK";
+      elRefresh.disabled = false;
     }, 150);
   }
 
-  // Wire events
-  if (elFilter) elFilter.addEventListener("input", render);
-  if (elRefresh) elRefresh.addEventListener("click", refresh);
+  elFilter.addEventListener("input", render);
+  elRefresh.addEventListener("click", refresh);
 
-  // Init
+  // init
   seedQuotes();
   render();
-  if (elLast) elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+  elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
 });
