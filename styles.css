@@ -130,7 +130,12 @@
 }
 
 .tc-tablewrap{ margin-top:12px; overflow:auto; }
-.tc-table{ width:100%; border-collapse: collapse; }
+.tc-table{
+  width: 100%;
+  min-width: 900px; /* oder 1000px, je nach Geschmack */
+  border-collapse: collapse;
+}
+
 .tc-table th, .tc-table td{
   padding: 12px 10px;
   border-bottom: 1px solid rgba(255,255,255,.08);
