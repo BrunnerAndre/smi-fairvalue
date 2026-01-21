@@ -39,18 +39,19 @@
           </div>
 
           <div class="tc-tablewrap">
-            <table class="tc-table">
+           <table class="tc-table" id="smiTable">
               <thead>
                 <tr>
-                  <th>Titel</th>
-                  <th>Symbol</th>
-                  <th>Preis</th>
-                  <th>Fair Value</th>
-                  <th>Discount / Premium</th>
-                  <th>Δ</th>
-                  <th>Δ%</th>
+                  <th data-sort="name">Titel</th>
+                  <th data-sort="symbol">Symbol</th>
+                  <th data-sort="price">Preis</th>
+                  <th data-sort="fairValue">Fair Value</th>
+                  <th data-sort="disc">Discount / Premium</th>
+                  <th data-sort="delta">Δ</th>
+                  <th data-sort="deltaPct">Δ%</th>
                 </tr>
               </thead>
+
               <tbody id="tbody"></tbody>
             </table>
           </div>
