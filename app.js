@@ -1,5 +1,5 @@
 // Theo Capital — SMI Dummy + Detail Panel (ARK-ish)
-// No API. Click a row to open detail panel with scenarios + sparkline + implied assumptions.
+// Step A: Sorting + Selected Row + Deep-link (?symbol=) + URL updates.
 
 const SMI = [
   { name: "ABB", symbol: "ABBN.SW", base: 44.20, fairValue: 50.00, growth: 6.0, margin: 9.5 },
@@ -28,44 +28,31 @@ function fmt(x, digits = 2) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   return Number(x).toFixed(digits);
 }
-
 function pct(x, digits = 2) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   const sign = x > 0 ? "+" : "";
   return `${sign}${Number(x).toFixed(digits)}%`;
 }
-
 function makeDummyQuote(base) {
-  const dp = (Math.random() * 4) - 2; // -2%..+2%
+  const dp = (Math.random() * 4) - 2;
   const c = base * (1 + dp / 100);
   const d = c - base;
   return { c, d, dp };
 }
-
 function discountPct(price, fairValue) {
-  return ((fairValue - price) / fairValue) * 100; // + = discount
+  return ((fairValue - price) / fairValue) * 100;
 }
-
-function narrative({ disc, growth, margin }) {
-  if (disc >= 0) {
-    return `Die Aktie handelt mit einem Discount zum Fair Value. Das deutet darauf hin, dass der Markt konservativere Annahmen einpreist — z.B. geringeres zukünftiges Wachstum (≈ ${growth.toFixed(1)}% p.a.) oder Margendruck (Net income margin ≈ ${margin.toFixed(1)}%). Ein Re-Rating wäre möglich, falls Wachstum/Margen stabiler ausfallen oder das Risiko sinkt.`;
-  }
-  return `Die Aktie handelt mit einem Premium zum Fair Value. Der Markt preist damit überdurchschnittliche Erwartungen ein — typischerweise höheres Wachstum (≈ ${growth.toFixed(1)}% p.a.) und/oder robuste Margen (Net income margin ≈ ${margin.toFixed(1)}%). Wichtig ist, ob diese Annahmen nachhaltig sind; bei Enttäuschungen droht Multiple-Compression.`;
-}
-
 function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
-
 function makeSparkSeries(anchor, n = 30) {
   let v = anchor;
   const out = [];
   for (let i = 0; i < n; i++) {
-    const step = (Math.random() - 0.5) * 0.9; // volatility
+    const step = (Math.random() - 0.5) * 0.9;
     v = Math.max(0.1, v * (1 + step / 100));
     out.push(v);
   }
   return out;
 }
-
 function sparkPath(values, w = 160, h = 46, pad = 4) {
   const min = Math.min(...values);
   const max = Math.max(...values);
@@ -78,14 +65,23 @@ function sparkPath(values, w = 160, h = 46, pad = 4) {
     return `${i === 0 ? "M" : "L"}${x.toFixed(2)} ${y.toFixed(2)}`;
   }).join(" ");
 }
-
 function impliedFromPrice(price, fairValue, baseGrowth, baseMargin) {
-  // Dummy heuristic: discount => lower implied growth/margin; premium => higher
-  const disc = ((fairValue - price) / fairValue) * 100; // + discount
+  const disc = ((fairValue - price) / fairValue) * 100;
   const g = clamp(baseGrowth - disc * 0.12, 0.5, 15);
   const m = clamp(baseMargin - disc * 0.08, 1, 35);
   return { disc, g, m };
 }
+function narrative({ disc, growth, margin }) {
+  if (disc >= 0) {
+    return `Die Aktie handelt mit einem Discount zum Fair Value. Das deutet darauf hin, dass der Markt konservativere Annahmen einpreist — z.B. geringeres zukünftiges Wachstum (≈ ${growth.toFixed(1)}% p.a.) oder Margendruck (Net income margin ≈ ${margin.toFixed(1)}%). Ein Re-Rating wäre möglich, falls Wachstum/Margen stabiler ausfallen oder das Risiko sinkt.`;
+  }
+  return `Die Aktie handelt mit einem Premium zum Fair Value. Der Markt preist damit überdurchschnittliche Erwartungen ein — typischerweise höheres Wachstum (≈ ${growth.toFixed(1)}% p.a.) und/oder robuste Margen (Net income margin ≈ ${margin.toFixed(1)}%). Wichtig ist, ob diese Annahmen nachhaltig sind; bei Enttäuschungen droht Multiple-Compression.`;
+}
+
+// --- State (Step A) ---
+let sortKey = "disc";
+let sortDir = "desc"; // default: biggest discount first
+let selectedSymbol = null;
 
 window.addEventListener("DOMContentLoaded", () => {
   const elTbody = document.getElementById("tbody");
@@ -94,11 +90,11 @@ window.addEventListener("DOMContentLoaded", () => {
   const elFilter = document.getElementById("filter");
   const elRefresh = document.getElementById("refreshBtn");
   const elCount = document.getElementById("count");
-
   const elDetail = document.getElementById("detail");
   const elDetailCloseBtn = document.getElementById("detailCloseBtn");
+  const elTable = document.getElementById("smiTable");
 
-  if (!elTbody) return;
+  if (!elTbody || !elTable) return;
 
   let quotes = new Map();
 
@@ -107,26 +103,56 @@ window.addEventListener("DOMContentLoaded", () => {
     for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
   }
 
+  function getRowComputed(r) {
+    const q = quotes.get(r.symbol);
+    const disc = discountPct(q.c, r.fairValue);
+    return {
+      ...r,
+      quote: q,
+      disc,
+      delta: q.d,
+      deltaPct: q.dp,
+      price: q.c
+    };
+  }
+
+  function compare(a, b) {
+    const dir = sortDir === "asc" ? 1 : -1;
+    const va = a[sortKey];
+    const vb = b[sortKey];
+
+    // string sort
+    if (typeof va === "string" || typeof vb === "string") {
+      return dir * String(va).localeCompare(String(vb), "de", { sensitivity: "base" });
+    }
+    // number sort
+    return dir * ((va ?? 0) - (vb ?? 0));
+  }
+
   function render() {
     const q = (elFilter?.value || "").trim().toLowerCase();
-    const rows = SMI.filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q));
+    let rows = SMI
+      .filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q))
+      .map(getRowComputed);
+
+    rows.sort(compare);
+
     elCount.textContent = rows.length;
 
     elTbody.innerHTML = rows.map(r => {
-      const quote = quotes.get(r.symbol);
-      const moveCls = quote.dp >= 0 ? "tc-pos" : "tc-neg";
-      const disc = discountPct(quote.c, r.fairValue);
-      const discCls = disc >= 0 ? "tc-discount" : "tc-premium";
+      const moveCls = r.deltaPct >= 0 ? "tc-pos" : "tc-neg";
+      const discCls = r.disc >= 0 ? "tc-discount" : "tc-premium";
+      const selectedCls = r.symbol === selectedSymbol ? "is-selected" : "";
 
       return `
-        <tr data-symbol="${r.symbol}">
+        <tr data-symbol="${r.symbol}" class="${selectedCls}">
           <td>${r.name}</td>
           <td class="tc-mono">${r.symbol}</td>
-          <td class="tc-num">${fmt(quote.c)}</td>
+          <td class="tc-num">${fmt(r.price)}</td>
           <td class="tc-num">${fmt(r.fairValue)}</td>
-          <td><span class="tc-badge2 ${discCls}">${pct(disc)}</span></td>
-          <td class="tc-num ${moveCls}">${fmt(quote.d)}</td>
-          <td class="tc-num ${moveCls}">${pct(quote.dp)}</td>
+          <td><span class="tc-badge2 ${discCls}">${pct(r.disc)}</span></td>
+          <td class="tc-num ${moveCls}">${fmt(r.delta)}</td>
+          <td class="tc-num ${moveCls}">${pct(r.deltaPct)}</td>
         </tr>
       `;
     }).join("");
@@ -176,11 +202,27 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function openDetail(symbol) {
+  function openDetail(symbol, { pushUrl = true } = {}) {
     const r = SMI.find(x => x.symbol === symbol);
     if (!r) return;
 
     const quote = quotes.get(r.symbol) || makeDummyQuote(r.base);
+
+    // mark selected
+    selectedSymbol = r.symbol;
+    render();
+
+    // update URL
+    if (pushUrl) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("symbol", r.symbol);
+      history.pushState({ symbol: r.symbol }, "", url);
+    }
+
+    // sparkline
+    const elSparkPath = document.getElementById("sparkPath");
+    const series = makeSparkSeries(quote.c, 30);
+    if (elSparkPath) elSparkPath.setAttribute("d", sparkPath(series));
 
     const scenarios = {
       base: { fv: r.fairValue, growth: r.growth, margin: r.margin },
@@ -188,26 +230,28 @@ window.addEventListener("DOMContentLoaded", () => {
       bear: { fv: r.fairValue * 0.90, growth: Math.max(0.5, r.growth - 1.5), margin: Math.max(1, r.margin - 1.0) },
     };
 
-    // sparkline
-    const elSparkPath = document.getElementById("sparkPath");
-    const series = makeSparkSeries(quote.c, 30);
-    if (elSparkPath) elSparkPath.setAttribute("d", sparkPath(series));
-
-    // show
+    // show panel
     elDetail.style.display = "block";
     elDetail.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // wire tabs
+    // tabs
     document.querySelectorAll(".tc-tab").forEach(btn => {
       btn.onclick = () => setScenario(r, quote, scenarios, btn.getAttribute("data-scn"));
     });
 
-    // default scenario
     setScenario(r, quote, scenarios, "base");
   }
 
-  function closeDetail() {
+  function closeDetail({ clearUrl = true } = {}) {
     elDetail.style.display = "none";
+    selectedSymbol = null;
+    render();
+
+    if (clearUrl) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("symbol");
+      history.pushState({}, "", url);
+    }
   }
 
   function refresh() {
@@ -220,23 +264,56 @@ window.addEventListener("DOMContentLoaded", () => {
       elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
       elStatus.textContent = "OK";
       elRefresh.disabled = false;
-      closeDetail();
+      closeDetail({ clearUrl: false }); // keep URL unless you want to clear it
     }, 150);
   }
 
-  // Row click via delegation
+  // --- Events ---
   elTbody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr[data-symbol]");
     if (!tr) return;
     openDetail(tr.getAttribute("data-symbol"));
   });
 
-  elDetailCloseBtn.addEventListener("click", closeDetail);
-  elFilter.addEventListener("input", render);
+  elDetailCloseBtn.addEventListener("click", () => closeDetail());
+
+  elFilter.addEventListener("input", () => {
+    // if filter hides selected row, keep selection but it won’t show in table; OK for MVP
+    render();
+  });
+
   elRefresh.addEventListener("click", refresh);
+
+  // sort header clicks
+  elTable.querySelector("thead").addEventListener("click", (e) => {
+    const th = e.target.closest("th[data-sort]");
+    if (!th) return;
+
+    const key = th.getAttribute("data-sort");
+    if (sortKey === key) {
+      sortDir = (sortDir === "asc") ? "desc" : "asc";
+    } else {
+      sortKey = key;
+      sortDir = (key === "disc") ? "desc" : "asc"; // sensible defaults
+    }
+    render();
+  });
+
+  // back/forward handling
+  window.addEventListener("popstate", () => {
+    const url = new URL(window.location.href);
+    const sym = url.searchParams.get("symbol");
+    if (sym) openDetail(sym, { pushUrl: false });
+    else closeDetail({ clearUrl: false });
+  });
 
   // init
   seedQuotes();
   render();
   elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+
+  // deep-link open
+  const url = new URL(window.location.href);
+  const sym = url.searchParams.get("symbol");
+  if (sym) openDetail(sym, { pushUrl: false });
 });
