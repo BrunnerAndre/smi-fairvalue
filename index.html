@@ -55,6 +55,50 @@
             </table>
           </div>
 
+          <!-- Detail Panel (klick auf Zeile öffnet) -->
+          <section id="detail" class="tc-detail" style="display:none;">
+            <div class="tc-detail-head">
+              <div>
+                <div class="tc-detail-kicker">Selected</div>
+                <h2 class="tc-detail-title" id="detailTitle">—</h2>
+                <p class="tc-detail-sub" id="detailSubtitle">—</p>
+              </div>
+
+              <button class="tc-detail-close" id="detailCloseBtn" type="button" aria-label="Close details">✕</button>
+            </div>
+
+            <div class="tc-detail-grid">
+              <div class="tc-detail-card">
+                <div class="tc-detail-label">Price</div>
+                <div class="tc-detail-value" id="detailPrice">—</div>
+                <div class="tc-detail-note" id="detailPriceNote">—</div>
+              </div>
+
+              <div class="tc-detail-card">
+                <div class="tc-detail-label">Fair Value</div>
+                <div class="tc-detail-value" id="detailFairValue">—</div>
+                <div class="tc-detail-note" id="detailDiscPrem">—</div>
+              </div>
+
+              <div class="tc-detail-card">
+                <div class="tc-detail-label">Growth (assumption)</div>
+                <div class="tc-detail-value" id="detailGrowth">—</div>
+                <div class="tc-detail-note">Dummy assumption</div>
+              </div>
+
+              <div class="tc-detail-card">
+                <div class="tc-detail-label">Net income margin</div>
+                <div class="tc-detail-value" id="detailMargin">—</div>
+                <div class="tc-detail-note">Dummy assumption</div>
+              </div>
+            </div>
+
+            <div class="tc-detail-narrative">
+              <div class="tc-detail-label">Narrative</div>
+              <p id="detailNarrative" class="tc-detail-text">—</p>
+            </div>
+          </section>
+
           <p class="tc-foot" id="fairvalue">
             Hinweis: Das sind Dummy-Werte. Als nächstes ersetzen wir die Datenquelle durch eine API / Proxy.
           </p>
@@ -80,24 +124,21 @@
         </div>
       </aside>
     </section>
- <footer class="tc-wrap tc-disclaimer">
-  <p>
-    <strong>Disclaimer:</strong>
-    Die auf dieser Website dargestellten Informationen dienen ausschließlich
-    zu Informations- und Demonstrationszwecken und stellen
-    <strong>keine Anlageberatung, Anlageempfehlung oder Aufforderung zum Kauf
-    oder Verkauf von Finanzinstrumenten</strong> dar.
-    Trotz sorgfältiger Erstellung wird keine Gewähr für Richtigkeit,
-    Vollständigkeit oder Aktualität der Inhalte übernommen.
-    Jegliche Nutzung erfolgt auf eigenes Risiko.
-  </p>
-</footer>
   </main>
 
-<script src="./app.js"></script>
-  <script>
-  console.log("INLINE TEST: index.html loaded, scripts should run.");
-</script>
+  <footer class="tc-wrap tc-disclaimer">
+    <p>
+      <strong>Disclaimer:</strong>
+      Die auf dieser Website dargestellten Informationen dienen ausschließlich
+      zu Informations- und Demonstrationszwecken und stellen
+      <strong>keine Anlageberatung, Anlageempfehlung oder Aufforderung zum Kauf
+      oder Verkauf von Finanzinstrumenten</strong> dar.
+      Trotz sorgfältiger Erstellung wird keine Gewähr für Richtigkeit,
+      Vollständigkeit oder Aktualität der Inhalte übernommen.
+      Jegliche Nutzung erfolgt auf eigenes Risiko.
+    </p>
+  </footer>
 
+  <script src="./app.js"></script>
 </body>
 </html>
