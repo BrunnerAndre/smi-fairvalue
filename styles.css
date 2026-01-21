@@ -370,3 +370,6 @@ body{ margin:0; background: var(--bg); color: var(--ink); }
   color: rgba(11,15,20,.86);
   font-weight: 800;
 }
+.tc-table td, .tc-table th { color: var(--ink) !important; }
+.tc-table { display: table !important; }
+
