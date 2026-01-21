@@ -1,4 +1,5 @@
 // Theo Capital — SMI Dummy quotes (no API)
+// Robust init: waits for DOMContentLoaded + basic diagnostics.
 
 const SMI = [
   { name: "ABB", symbol: "ABBN.SW", base: 44.20, fairValue: 50.00 },
@@ -23,17 +24,11 @@ const SMI = [
   { name: "Zurich Insurance", symbol: "ZURN.SW", base: 455.00, fairValue: 500.00 },
 ];
 
-const elTbody = document.getElementById("tbody");
-const elStatus = document.getElementById("status");
-const elLast = document.getElementById("lastUpdate");
-const elFilter = document.getElementById("filter");
-const elRefresh = document.getElementById("refreshBtn");
-const elCount = document.getElementById("count");
-
 function fmt(x, digits = 2) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   return Number(x).toFixed(digits);
 }
+
 function pct(x, digits = 2) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   const sign = x > 0 ? "+" : "";
@@ -41,144 +36,89 @@ function pct(x, digits = 2) {
 }
 
 function makeDummyQuote(base) {
-  // daily % change between -2% and +2%
-  const dp = (Math.random() * 4) - 2;
+  const dp = (Math.random() * 4) - 2; // -2%..+2%
   const c = base * (1 + dp / 100);
   const d = c - base;
   return { c, d, dp };
 }
 
 function discountPct(price, fairValue) {
-  // positive => discount (price below fair value)
-  return ((fairValue - price) / fairValue) * 100;
+  return ((fairValue - price) / fairValue) * 100; // + = discount
 }
 
-let quotes = new Map(); // symbol -> {c,d,dp}
+window.addEventListener("DOMContentLoaded", () => {
+  // Grab DOM nodes AFTER DOM is ready
+  const elTbody = document.getElementById("tbody");
+  const elStatus = document.getElementById("status");
+  const elLast = document.getElementById("lastUpdate");
+  const elFilter = document.getElementById("filter");
+  const elRefresh = document.getElementById("refreshBtn");
+  const elCount = document.getElementById("count");
 
-function seedQuotes() {
-  quotes.clear();
-  for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
-}
+  // Hard fail early if markup doesn't match
+  if (!elTbody) {
+    console.error("[TheoCapital] #tbody not found. Check index.html has <tbody id='tbody'></tbody>.");
+    return;
+  }
 
-function render() {
-  const q = (elFilter.value || "").trim().toLowerCase();
-  const rows = SMI.filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q));
-  elCount.textContent = String(rows.length);
+  // Diagnostics: confirms app.js is loaded
+  console.log("[TheoCapital] app.js loaded. Rendering rows:", SMI.length);
 
-  elTbody.innerHTML = rows.map(r => {
-    const quote = quotes.get(r.symbol);
-    const clsMove = quote.dp >= 0 ? "tc-pos" : "tc-neg";
-    const disc = discountPct(quote.c, r.fairValue);
-    const badgeCls = disc >= 0 ? "tc-discount" : "tc-premium";
+  let quotes = new Map(); // symbol -> {c,d,dp}
 
-    return `
-      <tr>
-        <td>${r.name}</td>
-        <td class="tc-mono">${r.symbol}</td>
+  function seedQuotes() {
+    quotes.clear();
+    for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
+  }
 
-        <td class="tc-num">${fmt(quote.c)}</td>
-        <td class="tc-num">${fmt(r.fairValue)}</td>
+  function render() {
+    const q = (elFilter?.value || "").trim().toLowerCase();
+    const rows = SMI.filter(r =>
+      !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q)
+    );
 
-        <td>
-          <span class="tc-badge2 ${badgeCls}">${pct(disc)}</span>
-        </td>
+    if (elCount) elCount.textContent = String(rows.length);
 
-        <td class="tc-num ${clsMove}">${fmt(quote.d)}</td>
-        <td class="tc-num ${clsMove}">${pct(quote.dp)}</td>
-      </tr>
-    `;
-  }).join("");
-}
+    elTbody.innerHTML = rows.map(r => {
+      const quote = quotes.get(r.symbol) || makeDummyQuote(r.base);
+      const clsMove = quote.dp >= 0 ? "tc-pos" : "tc-neg";
 
-function refresh() {
-  elRefresh.disabled = true;
-  elStatus.textContent = "Refreshing…";
+      const disc = discountPct(quote.c, r.fairValue);
+      const badgeCls = disc >= 0 ? "tc-discount" : "tc-premium";
 
-  setTimeout(() => {
-    seedQuotes();
-    render();
-    elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
-    elStatus.textContent = "OK";
-    elRefresh.disabled = false;
-  }, 200);
-}
+      return `
+        <tr>
+          <td>${r.name}</td>
+          <td class="tc-mono">${r.symbol}</td>
+          <td class="tc-num">${fmt(quote.c)}</td>
+          <td class="tc-num">${fmt(r.fairValue)}</td>
+          <td><span class="tc-badge2 ${badgeCls}">${pct(disc)}</span></td>
+          <td class="tc-num ${clsMove}">${fmt(quote.d)}</td>
+          <td class="tc-num ${clsMove}">${pct(quote.dp)}</td>
+        </tr>
+      `;
+    }).join("");
+  }
 
-elFilter.addEventListener("input", render);
-elRefresh.addEventListener("click", refresh);
+  function refresh() {
+    if (elRefresh) elRefresh.disabled = true;
+    if (elStatus) elStatus.textContent = "Refreshing…";
 
-// init
-seedQuotes();
-render();
-elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
-;
-const elLast = document.getElementById("lastUpdate");
-const elFilter = document.getElementById("filter");
-const elRefresh = document.getElementById("refreshBtn");
-const elCount = document.getElementById("count");
+    setTimeout(() => {
+      seedQuotes();
+      render();
+      if (elLast) elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+      if (elStatus) elStatus.textContent = "OK";
+      if (elRefresh) elRefresh.disabled = false;
+    }, 150);
+  }
 
-function fmt(x, digits=2){
-  if (x === null || x === undefined || Number.isNaN(x)) return "—";
-  return Number(x).toFixed(digits);
-}
-function pct(x, digits=2){
-  if (x === null || x === undefined || Number.isNaN(x)) return "—";
-  return `${Number(x).toFixed(digits)}%`;
-}
+  // Wire events
+  if (elFilter) elFilter.addEventListener("input", render);
+  if (elRefresh) elRefresh.addEventListener("click", refresh);
 
-// Dummy generator: kleine Schwankung um base
-function makeDummyQuote(base){
-  // daily % change between -2.0% and +2.0%
-  const dp = (Math.random() * 4) - 2;
-  const c = base * (1 + dp / 100);
-  const d = c - base;
-  return { c, d, dp };
-}
-
-let quotes = new Map(); // symbol -> {c,d,dp}
-
-function seedQuotes(){
-  quotes.clear();
-  for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
-}
-
-function render(){
-  const q = (elFilter.value || "").trim().toLowerCase();
-  const rows = SMI.filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q));
-  elCount.textContent = String(rows.length);
-
-  elTbody.innerHTML = rows.map(r => {
-    const quote = quotes.get(r.symbol);
-    const cls = quote.dp >= 0 ? "tc-pos" : "tc-neg";
-    return `
-      <tr>
-        <td>${r.name}</td>
-        <td class="tc-mono">${r.symbol}</td>
-        <td class="tc-num">${fmt(quote.c)}</td>
-        <td class="tc-num ${cls}">${fmt(quote.d)}</td>
-        <td class="tc-num ${cls}">${pct(quote.dp)}</td>
-      </tr>
-    `;
-  }).join("");
-}
-
-function refresh(){
-  elRefresh.disabled = true;
-  elStatus.textContent = "Würfle…";
-
-  // kleine künstliche Verzögerung für “loading feel”
-  setTimeout(() => {
-    seedQuotes();
-    render();
-    elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
-    elStatus.textContent = "OK";
-    elRefresh.disabled = false;
-  }, 250);
-}
-
-elFilter.addEventListener("input", render);
-elRefresh.addEventListener("click", refresh);
-
-// init
-seedQuotes();
-render();
-elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+  // Init
+  seedQuotes();
+  render();
+  if (elLast) elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+});
