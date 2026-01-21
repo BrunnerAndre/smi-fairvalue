@@ -1,6 +1,9 @@
 // Theo Capital — SMI Dummy + Detail Panel (ARK-ish)
 // Step A: Sorting + Selected Row + Deep-link (?symbol=) + URL updates.
 
+const QUOTE_API = "https://<DEIN-WORKER>.workers.dev/api/quotes";
+
+
 const SMI = [
   { name: "ABB", symbol: "ABBN.SW", base: 44.20, fairValue: 50.00, growth: 6.0, margin: 9.5 },
   { name: "Alcon", symbol: "ALCN.SW", base: 74.30, fairValue: 82.00, growth: 7.0, margin: 14.0 },
