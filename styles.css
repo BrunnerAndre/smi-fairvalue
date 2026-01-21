@@ -166,13 +166,13 @@ body{ margin:0; background: var(--bg); color: var(--ink); }
 /* IMPORTANT for table overflow inside CSS grid */
 .tc-card{
   min-width: 0;
-
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: var(--surface);
   box-shadow: var(--shadow);
-  overflow: hidden;
+  /* overflow: hidden;  ❌ ENTFERNEN */
 }
+
 
 .tc-card-inner{
   padding: 16px;
@@ -238,18 +238,23 @@ body{ margin:0; background: var(--bg); color: var(--ink); }
 /* ========== Table ========== */
 .tc-tablewrap{
   margin-top: 12px;
+  display: block;
+  width: 100%;
   overflow-x: auto;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
-  border-radius: 12px;
   border: 1px solid var(--line2);
+  border-radius: 12px;
 }
+
 
 .tc-table{
   width: 100%;
-  min-width: 980px; /* ensures all columns show; scroll on small screens */
+  min-width: 980px;
   border-collapse: collapse;
   background: #fff;
 }
+
 
 .tc-table th,
 .tc-table td{
