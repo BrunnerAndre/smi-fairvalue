@@ -55,52 +55,49 @@
             </table>
           </div>
 
-          <!-- Detail Panel (klick auf Zeile öffnet) -->
-         <div class="tc-detail-head">
-  <div class="tc-detail-left">
-    <div class="tc-detail-kicker">Selected</div>
-    <h2 class="tc-detail-title" id="detailTitle">—</h2>
-    <p class="tc-detail-sub" id="detailSubtitle">—</p>
+          <!-- Detail Panel (click row opens) -->
+          <section id="detail" class="tc-detail" style="display:none;">
+            <div class="tc-detail-head">
+              <div class="tc-detail-left">
+                <div class="tc-detail-kicker">Selected</div>
+                <h2 class="tc-detail-title" id="detailTitle">—</h2>
+                <p class="tc-detail-sub" id="detailSubtitle">—</p>
 
-    <div class="tc-detail-metrics">
-      <div class="tc-metric">
-        <div class="tc-metric-label">Market vs Fair</div>
-        <div class="tc-metric-value" id="detailMvFv">—</div>
-      </div>
-      <div class="tc-metric">
-        <div class="tc-metric-label">Upside / Downside</div>
-        <div class="tc-metric-value" id="detailUpside">—</div>
-      </div>
-    </div>
-  </div>
+                <div class="tc-detail-metrics">
+                  <div class="tc-metric">
+                    <div class="tc-metric-label">Market vs Fair</div>
+                    <div class="tc-metric-value" id="detailMvFv">—</div>
+                  </div>
+                  <div class="tc-metric">
+                    <div class="tc-metric-label">Upside / Downside</div>
+                    <div class="tc-metric-value" id="detailUpside">—</div>
+                  </div>
+                </div>
+              </div>
 
-  <div class="tc-detail-right">
-    <div class="tc-spark-wrap">
-      <div class="tc-spark-label">Last 30d (dummy)</div>
-      <svg id="spark" class="tc-spark" viewBox="0 0 160 46" preserveAspectRatio="none">
-        <path id="sparkPath" d="" fill="none"></path>
-      </svg>
-    </div>
+              <div class="tc-detail-right">
+                <div class="tc-spark-wrap">
+                  <div class="tc-spark-label">Last 30d (dummy)</div>
+                  <svg class="tc-spark" viewBox="0 0 160 46" preserveAspectRatio="none" aria-label="Sparkline chart">
+                    <path id="sparkPath" d=""></path>
+                  </svg>
+                </div>
 
-    <button class="tc-detail-close" id="detailCloseBtn" type="button" aria-label="Close details">✕</button>
-  </div>
-</div>
+                <button class="tc-detail-close" id="detailCloseBtn" type="button" aria-label="Close details">✕</button>
+              </div>
+            </div>
 
-<div class="tc-tabs" role="tablist" aria-label="Scenarios">
-  <button class="tc-tab is-active" data-scn="base" type="button">Base</button>
-  <button class="tc-tab" data-scn="bull" type="button">Bull</button>
-  <button class="tc-tab" data-scn="bear" type="button">Bear</button>
-</div>
-
-
-              <button class="tc-detail-close" id="detailCloseBtn" type="button" aria-label="Close details">✕</button>
+            <div class="tc-tabs" role="tablist" aria-label="Scenarios">
+              <button class="tc-tab is-active" data-scn="base" type="button">Base</button>
+              <button class="tc-tab" data-scn="bull" type="button">Bull</button>
+              <button class="tc-tab" data-scn="bear" type="button">Bear</button>
             </div>
 
             <div class="tc-detail-grid">
               <div class="tc-detail-card">
                 <div class="tc-detail-label">Price</div>
                 <div class="tc-detail-value" id="detailPrice">—</div>
-                <div class="tc-detail-note" id="detailPriceNote">—</div>
+                <div class="tc-detail-note">Dummy quote</div>
               </div>
 
               <div class="tc-detail-card">
@@ -112,20 +109,19 @@
               <div class="tc-detail-card">
                 <div class="tc-detail-label">Growth (assumption)</div>
                 <div class="tc-detail-value" id="detailGrowth">—</div>
-                <div class="tc-detail-note">Dummy assumption</div>
+                <div class="tc-detail-note">Scenario-dependent</div>
               </div>
 
               <div class="tc-detail-card">
                 <div class="tc-detail-label">Net income margin</div>
                 <div class="tc-detail-value" id="detailMargin">—</div>
-                <div class="tc-detail-note">Dummy assumption</div>
+                <div class="tc-detail-note">Scenario-dependent</div>
               </div>
+            </div>
 
-              <div class="tc-implied">
+            <div class="tc-implied">
               <div class="tc-detail-label">Implied assumptions (from price)</div>
               <p class="tc-detail-text" id="detailImplied">—</p>
-              </div>
-
             </div>
 
             <div class="tc-detail-narrative">
@@ -154,7 +150,7 @@
           </div>
 
           <p class="tc-foot" style="margin-top:14px;">
-            Nächster Schritt: pro Titel zusätzlich <b>Wachstum</b> &amp; <b>Net Income Margin</b> erklären (Discount/Premium Narrative).
+            Klick auf einen Titel: Details inkl. Szenarien, implied assumptions und Narrative (Growth &amp; Margins).
           </p>
         </div>
       </aside>
