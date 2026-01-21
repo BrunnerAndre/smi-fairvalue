@@ -1,8 +1,9 @@
-// Theo Capital — SMI Dummy + Detail Panel (ARK-ish)
-// Step A: Sorting + Selected Row + Deep-link (?symbol=) + URL updates.
+// Theo Capital — SMI (ARK-ish)
+// Step A: Sorting + Selected Row + Deep-link (?symbol=...) + URL updates
+// Step B: Real quotes via your own proxy (Cloudflare Worker), with dummy fallback.
 
+// 1) SET THIS to your Worker URL:
 const QUOTE_API = "https://<DEIN-WORKER>.workers.dev/api/quotes";
-
 
 const SMI = [
   { name: "ABB", symbol: "ABBN.SW", base: 44.20, fairValue: 50.00, growth: 6.0, margin: 9.5 },
@@ -27,6 +28,7 @@ const SMI = [
   { name: "Zurich Insurance", symbol: "ZURN.SW", base: 455.00, fairValue: 500.00, growth: 4.0, margin: 8.5 },
 ];
 
+// ---------- Helpers ----------
 function fmt(x, digits = 2) {
   if (x === null || x === undefined || Number.isNaN(x)) return "—";
   return Number(x).toFixed(digits);
@@ -37,15 +39,16 @@ function pct(x, digits = 2) {
   return `${sign}${Number(x).toFixed(digits)}%`;
 }
 function makeDummyQuote(base) {
-  const dp = (Math.random() * 4) - 2;
+  const dp = (Math.random() * 4) - 2; // -2%..+2%
   const c = base * (1 + dp / 100);
   const d = c - base;
   return { c, d, dp };
 }
 function discountPct(price, fairValue) {
-  return ((fairValue - price) / fairValue) * 100;
+  return ((fairValue - price) / fairValue) * 100; // + = discount
 }
 function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
 function makeSparkSeries(anchor, n = 30) {
   let v = anchor;
   const out = [];
@@ -69,6 +72,7 @@ function sparkPath(values, w = 160, h = 46, pad = 4) {
   }).join(" ");
 }
 function impliedFromPrice(price, fairValue, baseGrowth, baseMargin) {
+  // Dummy heuristic: discount => lower implied growth/margin; premium => higher
   const disc = ((fairValue - price) / fairValue) * 100;
   const g = clamp(baseGrowth - disc * 0.12, 0.5, 15);
   const m = clamp(baseMargin - disc * 0.08, 1, 35);
@@ -81,11 +85,12 @@ function narrative({ disc, growth, margin }) {
   return `Die Aktie handelt mit einem Premium zum Fair Value. Der Markt preist damit überdurchschnittliche Erwartungen ein — typischerweise höheres Wachstum (≈ ${growth.toFixed(1)}% p.a.) und/oder robuste Margen (Net income margin ≈ ${margin.toFixed(1)}%). Wichtig ist, ob diese Annahmen nachhaltig sind; bei Enttäuschungen droht Multiple-Compression.`;
 }
 
-// --- State (Step A) ---
+// ---------- State ----------
 let sortKey = "disc";
 let sortDir = "desc"; // default: biggest discount first
 let selectedSymbol = null;
 
+// ---------- App ----------
 window.addEventListener("DOMContentLoaded", () => {
   const elTbody = document.getElementById("tbody");
   const elStatus = document.getElementById("status");
@@ -97,17 +102,15 @@ window.addEventListener("DOMContentLoaded", () => {
   const elDetailCloseBtn = document.getElementById("detailCloseBtn");
   const elTable = document.getElementById("smiTable");
 
-  if (!elTbody || !elTable) return;
-
-  let quotes = new Map();
-
-  function seedQuotes() {
-    quotes.clear();
-    for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
+  if (!elTbody || !elTable) {
+    console.error("[TheoCapital] Missing #tbody or #smiTable in index.html");
+    return;
   }
 
+  let quotes = new Map(); // symbol -> {c,d,dp,ts?}
+
   function getRowComputed(r) {
-    const q = quotes.get(r.symbol);
+    const q = quotes.get(r.symbol) || makeDummyQuote(r.base);
     const disc = discountPct(q.c, r.fairValue);
     return {
       ...r,
@@ -124,22 +127,20 @@ window.addEventListener("DOMContentLoaded", () => {
     const va = a[sortKey];
     const vb = b[sortKey];
 
-    // string sort
     if (typeof va === "string" || typeof vb === "string") {
       return dir * String(va).localeCompare(String(vb), "de", { sensitivity: "base" });
     }
-    // number sort
     return dir * ((va ?? 0) - (vb ?? 0));
   }
 
   function render() {
-    const q = (elFilter?.value || "").trim().toLowerCase();
+    const q = (elFilter.value || "").trim().toLowerCase();
+
     let rows = SMI
       .filter(r => !q || r.name.toLowerCase().includes(q) || r.symbol.toLowerCase().includes(q))
       .map(getRowComputed);
 
     rows.sort(compare);
-
     elCount.textContent = rows.length;
 
     elTbody.innerHTML = rows.map(r => {
@@ -159,6 +160,40 @@ window.addEventListener("DOMContentLoaded", () => {
         </tr>
       `;
     }).join("");
+  }
+
+  async function seedQuotes() {
+    quotes.clear();
+
+    // If worker not configured, keep dummy
+    if (!QUOTE_API || QUOTE_API.includes("<DEIN-WORKER>")) {
+      for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
+      return;
+    }
+
+    const symbols = SMI.map(r => r.symbol);
+    const url = `${QUOTE_API}?symbols=${encodeURIComponent(symbols.join(","))}`;
+
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+
+      for (const r of SMI) {
+        const q = data?.quotes?.[r.symbol];
+        if (q && !q.error && Number.isFinite(q.c)) quotes.set(r.symbol, q);
+        else quotes.set(r.symbol, makeDummyQuote(r.base));
+      }
+
+      // show timestamp if provided
+      const any = data?.quotes?.[SMI[0].symbol];
+      if (any?.ts) elLast.textContent = `Stand: ${any.ts} (via proxy)`;
+      else elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+    } catch (e) {
+      // fallback to dummy
+      for (const r of SMI) quotes.set(r.symbol, makeDummyQuote(r.base));
+      elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")} (fallback)`;
+    }
   }
 
   function setScenario(r, quote, scenarios, active) {
@@ -211,11 +246,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const quote = quotes.get(r.symbol) || makeDummyQuote(r.base);
 
-    // mark selected
     selectedSymbol = r.symbol;
     render();
 
-    // update URL
     if (pushUrl) {
       const url = new URL(window.location.href);
       url.searchParams.set("symbol", r.symbol);
@@ -233,11 +266,9 @@ window.addEventListener("DOMContentLoaded", () => {
       bear: { fv: r.fairValue * 0.90, growth: Math.max(0.5, r.growth - 1.5), margin: Math.max(1, r.margin - 1.0) },
     };
 
-    // show panel
     elDetail.style.display = "block";
     elDetail.scrollIntoView({ behavior: "smooth", block: "start" });
 
-    // tabs
     document.querySelectorAll(".tc-tab").forEach(btn => {
       btn.onclick = () => setScenario(r, quote, scenarios, btn.getAttribute("data-scn"));
     });
@@ -257,21 +288,18 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function refresh() {
+  async function refresh() {
     elStatus.textContent = "Refreshing…";
     elRefresh.disabled = true;
 
-    setTimeout(() => {
-      seedQuotes();
-      render();
-      elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
-      elStatus.textContent = "OK";
-      elRefresh.disabled = false;
-      closeDetail({ clearUrl: false }); // keep URL unless you want to clear it
-    }, 150);
+    await seedQuotes();
+    render();
+
+    elStatus.textContent = "OK";
+    elRefresh.disabled = false;
   }
 
-  // --- Events ---
+  // ---------- Events ----------
   elTbody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr[data-symbol]");
     if (!tr) return;
@@ -280,10 +308,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   elDetailCloseBtn.addEventListener("click", () => closeDetail());
 
-  elFilter.addEventListener("input", () => {
-    // if filter hides selected row, keep selection but it won’t show in table; OK for MVP
-    render();
-  });
+  elFilter.addEventListener("input", () => render());
 
   elRefresh.addEventListener("click", refresh);
 
@@ -297,7 +322,7 @@ window.addEventListener("DOMContentLoaded", () => {
       sortDir = (sortDir === "asc") ? "desc" : "asc";
     } else {
       sortKey = key;
-      sortDir = (key === "disc") ? "desc" : "asc"; // sensible defaults
+      sortDir = (key === "disc") ? "desc" : "asc";
     }
     render();
   });
@@ -310,13 +335,17 @@ window.addEventListener("DOMContentLoaded", () => {
     else closeDetail({ clearUrl: false });
   });
 
-  // init
-  seedQuotes();
-  render();
-  elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+  // ---------- Init ----------
+  (async () => {
+    await seedQuotes();
+    render();
+    if (!elLast.textContent || elLast.textContent.includes("—")) {
+      elLast.textContent = `Stand: ${new Date().toLocaleString("de-CH")}`;
+    }
 
-  // deep-link open
-  const url = new URL(window.location.href);
-  const sym = url.searchParams.get("symbol");
-  if (sym) openDetail(sym, { pushUrl: false });
+    // deep-link open
+    const url = new URL(window.location.href);
+    const sym = url.searchParams.get("symbol");
+    if (sym) openDetail(sym, { pushUrl: false });
+  })();
 });
