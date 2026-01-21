@@ -372,4 +372,116 @@ body{ margin:0; background: var(--bg); color: var(--ink); }
 }
 .tc-table td, .tc-table th { color: var(--ink) !important; }
 .tc-table { display: table !important; }
+/* ===== Detail panel  ===== */
+.tc-detail{
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.tc-detail-head{
+  display:flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.tc-detail-kicker{
+  display:inline-block;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(11,15,20,.55);
+  font-weight: 800;
+}
+
+.tc-detail-title{
+  margin: 6px 0 4px;
+  font-size: 26px;
+  letter-spacing: -0.3px;
+}
+
+.tc-detail-sub{
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.tc-detail-close{
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tc-detail-close:hover{
+  box-shadow: 0 10px 22px rgba(11,15,20,.08);
+}
+
+.tc-detail-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 820px){
+  .tc-detail-grid{ grid-template-columns: 1fr; }
+}
+
+.tc-detail-card{
+  border: 1px solid var(--line2);
+  border-radius: 14px;
+  padding: 14px;
+  background: var(--surface);
+}
+
+.tc-detail-label{
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-weight: 800;
+  color: rgba(11,15,20,.55);
+}
+
+.tc-detail-value{
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.3px;
+}
+
+.tc-detail-note{
+  margin-top: 6px;
+  color: var(--muted2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.tc-detail-narrative{
+  margin-top: 12px;
+  border-top: 1px solid var(--line2);
+  padding-top: 12px;
+}
+
+.tc-detail-text{
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+/* Clickable rows */
+.tc-table tbody tr{
+  cursor: pointer;
+}
+.tc-table tbody tr:active{
+  transform: translateY(1px);
+}
 
